@@ -1,0 +1,9 @@
+{
+    "name"         : "gpio",
+    "version"      : "0.0.1",
+    "description"  : "A sample GPIO app with backend code",
+    "dependencies" : { },
+    "scripts" : {
+        "start": "node app.js"
+    }
+}

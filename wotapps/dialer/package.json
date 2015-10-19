@@ -1,0 +1,9 @@
+{
+    "name"         : "phone",
+    "version"      : "0.0.1",
+    "description"  : "A sample app with backend code",
+    "dependencies" : { },
+    "scripts" : {
+        "start": "node app.js"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "name"         : "clock",
+    "version"      : "0.0.1",
+    "description"  : "A sample app without backend code",
+    "dependencies" : { },
+    "scripts" : {
+        "start": "node app.js"
+    }
+}

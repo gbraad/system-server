@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<title>System server</title>
+		<meta charset="utf-8">
+		<meta name="HandheldFriendly" content="True">
+		<meta http-equiv="cleartype" content="on">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+		
+		<style>
+            div.applicationlist { text-align: center; }
+            div.applicationlist ul li { float: left; height: 100px; margin: 0 30px 12px 0; width: 100px; cursor: hand; }
+            div.applicationlist ul li:last-child { margin-right: 0; }
+            div.applicationlist ul li a { background: #cccccc; color: #fff; display: block; height: 100px; line-height: 100px; overflow: hidden; text-decoration: none; -webkit-transition: all .3s ease; width: 100px; }
+            div.applicationlist ul li a:hover, footer ul li a:focus, footer ul li a:active { background: #333; color: #fff; }
+        </style>
+</head>
+<body>
+        <div class="applicationlist">
+		   <ul id="applications"></ul>
+	    </div>
+		<script>
+		
+		var settings = {
+		    "appPath" : "/apps/"
+		}
+		var appsUrl = window.location + "apps";
+		
+		var getJSON = function(url, success, error) {
+		    var xhr = new XMLHttpRequest();
+			xhr.open("GET", url, true);
+			
+			xhr.onreadystatechange = function() {
+                var status;
+                var data;
+
+			    if (xhr.readyState == 4) {
+                    status = xhr.status;
+                    if (status == 200) {
+                        data = JSON.parse(xhr.responseText);
+                        success && success(data);
+                    } else {
+                        error && error(status);
+                    }
+			    }
+			};
+            xhr.send();
+		}
+		
+		var post = function(url, params, success, error) {
+		    var xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+            
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            
+            xhr.onreadystatechange = function() {
+                var status;
+                var data;
+
+			    if (xhr.readyState == 4) {
+                    status = xhr.status;
+                    if (status == 200) {
+                        data = JSON.parse(xhr.responseText);
+                        success && success(data);
+                    } else {
+                        error && error(status);
+                    }
+			    }
+			};
+            xhr.send(params);
+		}
+
+        var consoleLogger = function(status) {
+            console.log(status);
+        }
+        
+        var openApp = function(name) {
+            document.location = appsUrl + '/' + name;
+        }
+        
+        var startApp = function(name) {
+            post(appsUrl, "name=" + name, openApp(name));
+        }
+
+        var createAppListElement = function(app, index, array) {
+            var newLi = document.createElement("li");
+            var newLink = document.createElement('a');
+            newLink.setAttribute('onclick', 'javascript:startApp("' + app.name + '")');
+            newLink.setAttribute('title', app.description);
+            newLink.innerHTML = app.name;
+            newLi.appendChild(newLink);
+            
+            var applicationList = document.querySelector('#applications');
+			applicationList.appendChild(newLi);
+        }
+
+        var createAppList = function(data) {
+            data.forEach(createAppListElement);
+        }
+
+		var onLoad = function() {
+            getJSON(appsUrl, createAppList, consoleLogger);
+		}
+
+		window.onload = onLoad();
+
+		</script>
+</body>
+</html>
