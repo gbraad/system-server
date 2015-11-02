@@ -60,7 +60,8 @@
 			    if (xhr.readyState == 4) {
                     status = xhr.status;
                     if (status == 200) {
-                        data = JSON.parse(xhr.responseText);
+                        if(xhr.responseText.length > 0)
+                            data = JSON.parse(xhr.responseText);
                         success && success(data);
                     } else {
                         error && error(status);
@@ -79,7 +80,12 @@
         }
         
         var startApp = function(name) {
-            post(appsUrl, "name=" + name, openApp(name));
+            var callback = function() {
+                window.setTimeout(function() {
+                    openApp(name);
+                }, 100);
+            };
+            post(appsUrl, "name=" + name, callback);
         }
 
         var createAppListElement = function(app, index, array) {
